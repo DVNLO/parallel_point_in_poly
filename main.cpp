@@ -6,11 +6,10 @@
 #include <utility>
 #include <vector>
 
-template <typename value_type>
 bool
 is_point_in_polygon(
-    std::pair<value_type, value_type> const & point,
-    std::vector<std::pair<value_type, value_type>> const & poly_vertices)
+    std::pair<float, float> const & point,
+    std::vector<std::pair<float, float>> const & poly_vertices)
 {
     auto const poly_vert_count{ poly_vertices.size() };
     if(poly_vert_count < 3U)
@@ -34,11 +33,10 @@ is_point_in_polygon(
     return intersect_count & 0x01U;
 }
 
-template <typename value_type>
 void
 are_points_in_polygon(
-    std::vector<std::pair<value_type, value_type>> const & points,
-    std::vector<std::pair<value_type, value_type>> const & poly_vertices,
+    std::vector<std::pair<float, float>> const & points,
+    std::vector<std::pair<float, float>> const & poly_vertices,
     std::vector<bool> & are_points_in_polygon_out)
 {
     auto const poly_vert_count{ poly_vertices.size() };
@@ -54,7 +52,7 @@ are_points_in_polygon(
     are_points_in_polygon_out.resize(point_count);
     auto const is_point_in_polygon_transformer{
         [&poly_vertices](
-            std::pair<value_type, value_type> const & point) -> bool
+            std::pair<float, float> const & point) -> bool
         {
             return is_point_in_polygon(point, poly_vertices);
         }
