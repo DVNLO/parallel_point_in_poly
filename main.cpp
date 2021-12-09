@@ -52,7 +52,7 @@ are_points_in_polygon(
     are_points_in_polygon_out.resize(point_count);
     std::transform(std::execution::par_unseq, points.cbegin(), points.cend(),
                    are_points_in_polygon_out.begin(),
-                   [&](std::pair<float, float> const & point) -> bool
+                   [=](std::pair<float, float> const & point) -> bool
                    { return is_point_in_polygon(point, poly_vertices); });
 }
 
