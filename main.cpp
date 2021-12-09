@@ -7,19 +7,18 @@
 #include <vector>
 
 bool
-is_point_in_polygon(
-    std::pair<float, float> const & point,
-    std::vector<std::pair<float, float>> const & poly_vertices)
+is_point_in_polygon(std::pair<float, float> const & point,
+                    std::vector<std::pair<float, float>> const & poly_vertices)
 {
-    auto const poly_vert_count{ poly_vertices.size() };
+    auto const poly_vert_count = poly_vertices.size();
     if(poly_vert_count < 3U)
     {
         return 0U;
     }
     uint_fast8_t intersect_count = 0U;
-    auto const point_x{ point.first };
-    auto const point_y{ point.second };
-    for(size_t i{ 0U }, j{ poly_vert_count - 1U }; i < poly_vert_count; ++i)
+    auto const point_x = point.first;
+    auto const point_y = point.second;
+    for(size_t i = 0U, j = poly_vert_count - 1U; i < poly_vert_count; ++i)
     {
         bool const s0{ point_x < poly_vertices[j].first
                        || point_x < poly_vertices[i].first };
@@ -39,20 +38,19 @@ are_points_in_polygon(
     std::vector<std::pair<float, float>> const & poly_vertices,
     std::vector<bool> & are_points_in_polygon_out)
 {
-    auto const poly_vert_count{ poly_vertices.size() };
+    auto const poly_vert_count = poly_vertices.size();
     if(poly_vert_count < 3U)
     {
         return;
     }
-    auto const point_count{ points.size() };
+    auto const point_count = points.size();
     if(!point_count)
     {
         return;
     }
     are_points_in_polygon_out.resize(point_count);
     auto const is_point_in_polygon_transformer{
-        [&poly_vertices](
-            std::pair<float, float> const & point) -> bool
+        [&poly_vertices](std::pair<float, float> const & point) -> bool
         {
             return is_point_in_polygon(point, poly_vertices);
         }
