@@ -55,8 +55,8 @@ are_points_in_polygon(
             return is_point_in_polygon(point, poly_vertices);
         }
     };
-    std::transform(std::execution::par_unseq, cbegin(points), cend(points),
-                   begin(are_points_in_polygon_out),
+    std::transform(std::execution::par_unseq, std::cbegin(points),
+                   std::cend(points), std::begin(are_points_in_polygon_out),
                    is_point_in_polygon_transformer);
 }
 
