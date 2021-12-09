@@ -50,7 +50,7 @@ are_points_in_polygon(
         return;
     }
     are_points_in_polygon_out.resize(point_count);
-    auto const is_point_in_polygon_transformer{
+    auto is_point_in_polygon_transformer{
         [&poly_vertices](std::pair<float, float> const & point) -> bool
         {
             return is_point_in_polygon(point, poly_vertices);
