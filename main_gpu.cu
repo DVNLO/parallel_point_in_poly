@@ -52,6 +52,31 @@ are_points_in_polygon_kernel(float const * const points_x,
                              unsigned long long polygon_vertex_count,
                              unsigned * const are_points_in_polygon_out)
 {
+    // uses dynamic shared memory
+    // https://developer.nvidia.com/blog/using-shared-memory-cuda-cc/
+    extern __shared__ float dynamic_shmem[];
+    float * const local_polygon_x = dynamic_shmem;
+    float * const local_polygon_y = local_polygon_x + polygon_vertex_count;
+
+    unsigned int const block_idx_x = blockIdx.x;
+    unsigned int const block_dim_x = blockDim.x;
+    unsigned int const grid_dim_x = gridDim.x;
+    unsigned int const thread_count = block_dim_x * grid_dim_x;
+    unsigned int const t_idx_x = threadIdx.x;
+    for(unsigned int i = t_idx_x; i < num_bins; i += block_dim_x)
+    {
+        local_polygon_x[i] = polygon_x[i];
+        local_polygon_y[i] = polygon_y[i];
+    }
+    __syncthreads();
+    unsigned int const begin_idx = t_idx_x + block_idx_x * block_dim_x;
+    for(unsigned int i = begin_idx; i < point_count; i += thread_count)
+    {
+        float const pq_x = points_x[i];
+        float const pq_y = points_y[i];
+        are_points_in_polygon_out[t_idx_x] = is_point_in_polygon(
+            pq_x, pq_y, local_polygon_x, local_polygon_y, polygon_vertex_count);
+    }
 }
 
 // issue changed interface since cpp stl types were not easily
@@ -92,12 +117,15 @@ are_points_in_polygon(float const * const points_x_h,
     cuda_push(polygon_x_h, polygon_x_d, polygon_vertex_count_bytes);
     cuda_push(polygon_y_h, polygon_y_d, polygon_vertex_count_bytes);
 
-    cudaDeviceSynchronize();
-
+    std::size_t dynamic_shared_memory_sz = 2 * point_count_bytes;
     std::size_t const grid_sz{ div_ceil(point_count, BLOCK_SZ) };
     dim3 dim_grid(grid_sz, 1, 1);
     dim3 dim_block(BLOCK_SZ, 1, 1);
-    are_points_in_polygon_kernel<<<dim_grid, dim_block>>>(
+
+    cudaDeviceSynchronize();
+
+    are_points_in_polygon_kernel<<<dim_grid, dim_block,
+                                   dynamic_shared_memory_sz>>>(
         points_x_d, points_y_d, point_count, polygon_x_d, polygon_y_d,
         polygon_vertex_count, are_points_in_polygon_out_d);
 
