@@ -1,0 +1,288 @@
+################# TEST : 0
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.511552
+begin point verification
+test_unit_square passed
+################# TEST : 1
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.515194
+begin point verification
+test_unit_square passed
+################# TEST : 2
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.573786
+begin point verification
+test_unit_square passed
+################# TEST : 3
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.550191
+begin point verification
+test_unit_square passed
+################# TEST : 4
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.436468
+begin point verification
+test_unit_square passed
+################# TEST : 5
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.502401
+begin point verification
+test_unit_square passed
+################# TEST : 6
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.740909
+begin point verification
+test_unit_square passed
+################# TEST : 7
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.716937
+begin point verification
+test_unit_square passed
+################# TEST : 8
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.656912
+begin point verification
+test_unit_square passed
+################# TEST : 9
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.482244
+begin point verification
+test_unit_square passed
+################# TEST : 10
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.456361
+begin point verification
+test_unit_square passed
+################# TEST : 11
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.482707
+begin point verification
+test_unit_square passed
+################# TEST : 12
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.794674
+begin point verification
+test_unit_square passed
+################# TEST : 13
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.728046
+begin point verification
+test_unit_square passed
+################# TEST : 14
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 2.029673
+begin point verification
+test_unit_square passed
+################# TEST : 15
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.582723
+begin point verification
+test_unit_square passed
+################# TEST : 16
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.462687
+begin point verification
+test_unit_square passed
+################# TEST : 17
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.532011
+begin point verification
+test_unit_square passed
+################# TEST : 18
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.970724
+begin point verification
+test_unit_square passed
+################# TEST : 19
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.451948
+begin point verification
+test_unit_square passed
+################# TEST : 20
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.915789
+begin point verification
+test_unit_square passed
+################# TEST : 21
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.487917
+begin point verification
+test_unit_square passed
+################# TEST : 22
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 2.063217
+begin point verification
+test_unit_square passed
+################# TEST : 23
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.453015
+begin point verification
+test_unit_square passed
+################# TEST : 24
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.593509
+begin point verification
+test_unit_square passed
+################# TEST : 25
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.708624
+begin point verification
+test_unit_square passed
+################# TEST : 26
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.552564
+begin point verification
+test_unit_square passed
+################# TEST : 27
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.508679
+begin point verification
+test_unit_square passed
+################# TEST : 28
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.561922
+begin point verification
+test_unit_square passed
+################# TEST : 29
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 2.232342
+begin point verification
+test_unit_square passed
+################# TEST : 30
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.473161
+begin point verification
+test_unit_square passed
+################# TEST : 31
+begin test_unit_square
+begin point allocation
+begin point generation
+begin unit square allocation
+begin point testing
+elapsed seconds : 1.512554
+begin point verification
+test_unit_square passed
