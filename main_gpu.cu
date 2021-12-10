@@ -57,24 +57,24 @@ are_points_in_polygon_kernel(float const * const points_x,
     extern __shared__ float dynamic_shmem[];
     float * const local_polygon_x = dynamic_shmem;
     float * const local_polygon_y = local_polygon_x + polygon_vertex_count;
-
-    unsigned int const block_idx_x = blockIdx.x;
-    unsigned int const block_dim_x = blockDim.x;
-    unsigned int const grid_dim_x = gridDim.x;
-    unsigned int const thread_count = block_dim_x * grid_dim_x;
-    unsigned int const t_idx_x = threadIdx.x;
-    for(unsigned int i = t_idx_x; i < polygon_vertex_count; i += block_dim_x)
+    unsigned long long const block_idx_x = blockIdx.x;
+    unsigned long long const block_dim_x = blockDim.x;
+    unsigned long long const grid_dim_x = gridDim.x;
+    unsigned long long const thread_count = block_dim_x * grid_dim_x;
+    unsigned long long const t_idx_x = threadIdx.x;
+    for(unsigned long long i = t_idx_x; i < polygon_vertex_count;
+        i += block_dim_x)
     {
         local_polygon_x[i] = polygon_x[i];
         local_polygon_y[i] = polygon_y[i];
     }
     __syncthreads();
-    unsigned int const begin_idx = t_idx_x + block_idx_x * block_dim_x;
-    for(unsigned int i = begin_idx; i < point_count; i += thread_count)
+    unsigned long long const begin_idx = t_idx_x + block_idx_x * block_dim_x;
+    for(unsigned long long i = begin_idx; i < point_count; i += thread_count)
     {
         float const pq_x = points_x[i];
         float const pq_y = points_y[i];
-        are_points_in_polygon_out[t_idx_x] = is_point_in_polygon(
+        are_points_in_polygon_out[i] = is_point_in_polygon(
             pq_x, pq_y, local_polygon_x, local_polygon_y, polygon_vertex_count);
     }
 }
@@ -149,7 +149,8 @@ bool
 test_unit_square()
 {
     puts("begin test_unit_square");
-    unsigned long long point_count = 1000000000;
+    // unsigned long long point_count = 1000000000;
+    unsigned long long point_count = 1000;
     puts("begin point allocation");
     unsigned long long const point_count_bytes = point_count * sizeof(float);
     float * points_x = (float *)(malloc(point_count_bytes));
