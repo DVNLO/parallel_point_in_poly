@@ -149,8 +149,7 @@ bool
 test_unit_square()
 {
     puts("begin test_unit_square");
-    // unsigned long long point_count = 1000000000;
-    unsigned long long point_count = 1000;
+    unsigned long long point_count = 1000000000;
     puts("begin point allocation");
     unsigned long long const point_count_bytes = point_count * sizeof(float);
     float * points_x = (float *)(malloc(point_count_bytes));
