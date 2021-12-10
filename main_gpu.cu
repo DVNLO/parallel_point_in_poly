@@ -11,6 +11,15 @@
 #include "cuda_api.cu"
 #include "support.cu"
 
+#define BLOCK_SZ 512U
+
+std::size_t
+div_ceil(std::size_t const val, std::size_t divisor)
+// https://stackoverflow.com/questions/2745074/fast-ceiling-of-an-integer-division-in-c-c
+{
+    return val ? 1 + ((val - 1) / divisor) : val;
+}
+
 unsigned
 is_point_in_polygon(float const pq_x, float const pq_y,
                     float const * const polygon_x,
@@ -34,9 +43,20 @@ is_point_in_polygon(float const pq_x, float const pq_y,
     return intersect_count & 0x01U;
 }
 
+__global__ void
+are_points_in_polygon_kernel(float const * const points_x_h,
+                             float const * const points_y_h,
+                             unsigned long long const point_count,
+                             float const * const polygon_x_h,
+                             float const * const polygon_y_h,
+                             unsigned long long polygon_vertex_count,
+                             unsigned * const are_points_in_polygon_out_h)
+{
+}
+
 // issue changed interface since cpp stl types were not easily
-// transferable using the cuda memory library primitives. Concern that c-style
-// code will propigate into cpp application when using cuda.
+// transferable using the cuda memory library primitives. Concern that
+// c-style code will propigate into cpp application when using cuda.
 void
 are_points_in_polygon(float const * const points_x_h,
                       float const * const points_y_h,
@@ -71,11 +91,18 @@ are_points_in_polygon(float const * const points_x_h,
     cuda_push(points_y_h, points_y_d, point_count_bytes);
     cuda_push(polygon_x_h, polygon_x_d, polygon_vertex_count_bytes);
     cuda_push(polygon_y_h, polygon_y_d, polygon_vertex_count_bytes);
-    /*
+
     cudaDeviceSynchronize();
-    // launch kernel
+
+    std::size_t const grid_sz{ div_ceil(point_count, BLOCK_SZ) };
+    dim3 dim_grid(grid_sz, 1, 1);
+    dim3 dim_block(BLOCK_SZ, 1, 1);
+    are_points_in_polygon_kernel<<<dim_grid, dim_block>>>(
+        points_x_d, points_y_d, point_count, polygon_x_d, polygon_y_d,
+        polygon_vertex_count, are_points_in_polygon_out_d);
+
     cudaDeviceSynchronize();
-    */
+
     cuda_pull(are_points_in_polygon_out_d, are_points_in_polygon_out_h,
               out_bytes);
     cuda_free(points_x_d);
