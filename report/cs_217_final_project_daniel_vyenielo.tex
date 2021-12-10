@@ -53,20 +53,27 @@ Implementation on CPU was fairly trivial thanks to the parallel algorithms libra
 
 However, during compilation it became apparent that \texttt{nvc++} and \texttt{g++} offer varying levels of support of the parallel algorithms library. For example, the same code which compiled with \texttt{g++-10} on my local system would not compile with \texttt{nvc++} version 21.9 on bender. I discuss the issue later.
 
-Inspite of these shortcomings, I was able to implement a solution using \texttt{g++-10} on my local system. \texttt{nvc++} does not appear to parallel lambda's in the same way as \texttt{g++-10}.
+Inspite of these shortcomings, I was able to implement a solution using \texttt{g++-10} on my local system. \texttt{nvc++} does not appear to support parallel lambda's in the same way as \texttt{g++-10}.
 
 \subsection{Parallelizing on GPU}
 Parallelization on GPU was surprisingly similar to the Histogram kernel. My implementation leverages shared memory in much the same way histogram did. Each block is responsible for loading polygon vertices into shared memory. With the polygon loaded, each thread begins to determine if each point from the input set is within the polygon. Each thread strides through the input points in the same pattern as histogram, but since the point data each thread uses is exclusive to that thread there is no need to synchronize accesses to the points or to the output. 
 
 \subsection{Branchless Code}
-One additional optimization focused on minimizing branching. For both implementations the \texttt{is\_point\_in\_polygon()} attempts to not branch. However, there is shortcutting when evaluating the intersection condition. Which is ultimately implemented as branching. So despite by best efforts, there is branching in disguise as logical operators in my code. The shortcircuiting proved to be necessary to stop division by zero. 
+One additional optimization focused on minimizing branching. For both implementations the \texttt{is\_point\_in\_polygon()} attempts to not branch. However, there is shortcutting when evaluating the intersection condition to prevent division by zero. Ultimately the shortcutting is implemented as branching. So despite by best efforts, there is branching in disguise as logical operators in my code. The shortcircuiting proved to be necessary to stop division by zero. Note I am only assuming this since I do not know how to look at the GPU assembly code, unfortunately, without spending more time on the topic which I do not have.
 
 \section{Project Status}
-Is it feature complete? 
-Does everything work? 
-What does not work? 
-What are limitations of your project? (e.g. only works on square matrix) 
-What major technical challenges did you encounter?
+This project is feature complete, but significant issues were encountered during implementation. Multiple problems developed including issues with differences in the parallel algorithms implementation by the \texttt{nvc++} and \texttt{g++} compilers, lack of a \texttt{g++} compiler on bender which supports parallel algorithms library, challenges translating the point in polygon algorithm from math to code, and issues working with the standard template types and cuda simultaneousily. I Discuss each issue below.
+
+By far the most severe issues I encourntered where with compilation. \texttt{nvc++} and \texttt{g++} do not offer the same implementation guarentees when working with the c++ parallel algorithms library. The first issue is a difference in the way \texttt{std::transform()} handles a unary functor. In \texttt{g++} there is full support for passing a lambda as the unary function argument to \texttt{std::transform()}. However, \texttt{nvc++} does not offer the same guarentees with reference captures in the lambda capture field. According to documentation reference captures are supported but with a very obvious warning for race conditions and possible memory issues if compilation targets the gpu(\href{https://docs.nvidia.com/hpc-sdk/archive/21.1/compilers/c++-parallel-algorithms/}{documentation}). Nevertheless, when compiling with \texttt{nvc++} there is an option to target a cpu with the paramater \texttt{-stdpar=multicore}, which should allow the lamba capture to occur my reference the same as g++ offers it, but despite setting this flag \texttt{nvc++} will not compile the reference capture. 
+
+Another issue I encountered occured with an apparent race condition when using a \texttt{std::vector<bool>}. In \texttt{g++}, I suspect there is a race when using \texttt{std::transform()} and collecting results of a unary functor lambda into the \texttt{std::vector<bool>}. I was able to document cases (see \texttt{edge\_cases()} in main\_cpu.cpp) when running on the large point sets where points within the unit square were said to be outside the unit square. Sequential execution for the same points was always correct. Moreover, changing to from bool to uint\_fast8\_t and re-executing with a parallel execution policy did not cause inconsistent results. I am not sure what the true cause of this is and can only speculate.  
+
+The next issue was my own. I could not, despite significant effort, get the point in polygon edge cases correct. This effort was difficult because  of the division by zero issue when computing the $t_1$ parameter, mentioned above. My initial thought was to rationalize the denominator, and then scale the x-axis comparison by the denominator to remove the division by zero. However, this leads to issues when the denominator is negative or zero, since the inqualities break down. Ultamately, I had to give up on this issue to move forward with the project. I may return to this issue since ratioinalizing the denominator will yield truely branchless code since no shortcutting will be necessary.
+
+Lastly, one minor annoyance with this project was the cuda memory operations library. I could not determine how to transfer c++ stl types between host and device. The functions I found all focused on transfering bytes, which is greate for simple types like \texttt{std::vector<int>}, but not so great for composite types where the memory layout maybe a bit more complex. In my implementation I originally chose to use a \texttt{std::vector<std::pair<float, float>>} which I was unsure if accessing the underlying data of the vector would be ordered pair.first, pair.second, pair.first, pair.second, etc. Because of this limitation it necessitated changing the function interfaces into c-style interfaces with pointers, which works, but is difficult to maintain in a c++ application, not to mention it goes against modern cpp programming practices.
+
+Nevertheless, stepping down from my software engineering soap box, the implementations are feature complete, but as evidenced above are not without issue and getting the systems interactions correct proved to be the most challenging part.
+ 
 
 \section{Results}
 Timing of parallel code vs serial code. 
