@@ -44,13 +44,13 @@ is_point_in_polygon(float const pq_x, float const pq_y,
 }
 
 __global__ void
-are_points_in_polygon_kernel(float const * const points_x_h,
-                             float const * const points_y_h,
+are_points_in_polygon_kernel(float const * const points_x,
+                             float const * const points_y,
                              unsigned long long const point_count,
-                             float const * const polygon_x_h,
-                             float const * const polygon_y_h,
+                             float const * const polygon_x,
+                             float const * const polygon_y,
                              unsigned long long polygon_vertex_count,
-                             unsigned * const are_points_in_polygon_out_h)
+                             unsigned * const are_points_in_polygon_out)
 {
 }
 
@@ -101,7 +101,12 @@ are_points_in_polygon(float const * const points_x_h,
         points_x_d, points_y_d, point_count, polygon_x_d, polygon_y_d,
         polygon_vertex_count, are_points_in_polygon_out_d);
 
-    cudaDeviceSynchronize();
+    cuda_ret = cudaDeviceSynchronize();
+    if(cuda_ret != cudaSuccess)
+    {
+        // bad but works for now
+        FATAL("Unable to launch kernel");
+    }
 
     cuda_pull(are_points_in_polygon_out_d, are_points_in_polygon_out_h,
               out_bytes);
