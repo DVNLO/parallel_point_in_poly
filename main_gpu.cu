@@ -183,6 +183,7 @@ test_unit_square()
     stopTime(&timer);
     printf("%f s\n", elapsedTime(timer));
     puts("begin point verification");
+    bool ret = true;
     for(std::size_t i{ 0U }; i < point_count; ++i)
     {
         unsigned const s0{ (0.0 < points_x[i] && points_x[i] < 1.0
@@ -191,10 +192,14 @@ test_unit_square()
         {
             printf("%lu : (%f,%f) : %u =\\= %u\n", i, points_x[i], points_y[i],
                    s0, are_points_in_polygon_out[i]);
-            return false;
+            ret = false;
+            break;
         }
     }
-    return true;
+    free(points_x);
+    free(points_y);
+    free(are_points_in_polygon_out);
+    return ret;
 }
 
 int
