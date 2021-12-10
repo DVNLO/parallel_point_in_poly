@@ -124,7 +124,7 @@ are_points_in_polygon(float const * const points_x_h,
     cuda_push(polygon_x_h, polygon_x_d, polygon_vertex_count_bytes);
     cuda_push(polygon_y_h, polygon_y_d, polygon_vertex_count_bytes);
 
-    std::size_t dynamic_shared_memory_sz = 2 * point_count_bytes;
+    std::size_t dynamic_shared_memory_sz = 2 * polygon_vertex_count_bytes;
     std::size_t const grid_sz{ div_ceil(point_count, BLOCK_SZ) };
     dim3 dim_grid(grid_sz, 1, 1);
     dim3 dim_block(BLOCK_SZ, 1, 1);
@@ -156,7 +156,7 @@ bool
 test_unit_square()
 {
     puts("begin test_unit_square");
-    unsigned long long point_count = 1000000;
+    unsigned long long point_count = 10000;
     puts("begin point allocation");
     unsigned long long const point_count_bytes = point_count * sizeof(float);
     float * points_x = (float *)(malloc(point_count_bytes));
