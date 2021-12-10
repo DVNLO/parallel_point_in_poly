@@ -101,7 +101,7 @@ are_points_in_polygon(float const * const points_x_h,
         points_x_d, points_y_d, point_count, polygon_x_d, polygon_y_d,
         polygon_vertex_count, are_points_in_polygon_out_d);
 
-    cuda_ret = cudaDeviceSynchronize();
+    cudaError_t cuda_ret = cudaDeviceSynchronize();
     if(cuda_ret != cudaSuccess)
     {
         // bad but works for now
