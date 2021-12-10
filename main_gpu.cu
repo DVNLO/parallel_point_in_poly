@@ -20,7 +20,7 @@ div_ceil(std::size_t const val, std::size_t divisor)
     return val ? 1 + ((val - 1) / divisor) : val;
 }
 
-unsigned
+__device__ unsigned
 is_point_in_polygon(float const pq_x, float const pq_y,
                     float const * const polygon_x,
                     float const * const polygon_y,
@@ -43,6 +43,13 @@ is_point_in_polygon(float const pq_x, float const pq_y,
     return intersect_count & 0x01U;
 }
 
+/* Each thread block is responsible of privitizing a local polygon into shared
+ * memory. The block's threads then traverse the points array determining for
+ * each point if the point is inside the polygon. Since each thread works with a
+ * single point and writes to a corresponding exclusive memory location there is
+ * no potential for data races. The algorithm is very similar to Histogram,
+ * without synchronization requirements on the output bins.
+ */
 __global__ void
 are_points_in_polygon_kernel(float const * const points_x,
                              float const * const points_y,
@@ -56,7 +63,7 @@ are_points_in_polygon_kernel(float const * const points_x,
     // https://developer.nvidia.com/blog/using-shared-memory-cuda-cc/
     extern __shared__ float dynamic_shmem[];
     float * const local_polygon_x = dynamic_shmem;
-    float * const local_polygon_y = local_polygon_x + polygon_vertex_count;
+    float * const local_polygon_y = dynamic_shmem + polygon_vertex_count;
     unsigned long long const block_idx_x = blockIdx.x;
     unsigned long long const block_dim_x = blockDim.x;
     unsigned long long const grid_dim_x = gridDim.x;
@@ -79,7 +86,7 @@ are_points_in_polygon_kernel(float const * const points_x,
     }
 }
 
-// issue changed interface since cpp stl types were not easily
+// issue : changed interface since cpp stl types were not easily
 // transferable using the cuda memory library primitives. Concern that
 // c-style code will propigate into cpp application when using cuda.
 void
@@ -149,7 +156,7 @@ bool
 test_unit_square()
 {
     puts("begin test_unit_square");
-    unsigned long long point_count = 1000000000;
+    unsigned long long point_count = 1000000;
     puts("begin point allocation");
     unsigned long long const point_count_bytes = point_count * sizeof(float);
     float * points_x = (float *)(malloc(point_count_bytes));
