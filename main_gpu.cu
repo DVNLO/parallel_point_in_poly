@@ -63,7 +63,7 @@ are_points_in_polygon_kernel(float const * const points_x,
     unsigned int const grid_dim_x = gridDim.x;
     unsigned int const thread_count = block_dim_x * grid_dim_x;
     unsigned int const t_idx_x = threadIdx.x;
-    for(unsigned int i = t_idx_x; i < num_bins; i += block_dim_x)
+    for(unsigned int i = t_idx_x; i < polygon_vertex_count; i += block_dim_x)
     {
         local_polygon_x[i] = polygon_x[i];
         local_polygon_y[i] = polygon_y[i];
