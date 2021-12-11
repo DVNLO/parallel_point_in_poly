@@ -11,7 +11,7 @@
 \maketitle
 
 \begin{abstract}
-For this project I implement solutions to the point in polygon problem. Each solution was designed to run on cpu xor gpu due to limitations with the \texttt{nvc++} compiler's support for the cpp parallel algorithms library. Runtime performance for both implementations was recorded (unfortunately on different systems; discussed later) using a randomly generated collection of $10^9$ points over 32 trials. Each point was queried using a point in polygon implementation to determine if the point existed within a unit square situated in an xy-plane at $\left\lbrace (0,0), (0,1), (1,1), (1,0) \right\rbrace$. Finally the determination of each points location, inside or outside, of the polygon was verified sequentially. No inconsistent points were discovered across all trials and implementations.
+For this project I implement solutions to the point in polygon problem. Each solution was designed to run on cpu xor gpu due to limitations with the \texttt{nvc++} compiler's support for the cpp parallel algorithms library. Runtime performance for both implementations was recorded (unfortunately on different systems; discussed later) using a randomly generated collection of $10^8$ points over 32 trials. Each point was queried using a point in polygon implementation to determine if the point existed within a unit square situated in an xy-plane at $\left\lbrace (0,0), (0,1), (1,1), (1,0) \right\rbrace$. Finally the determination of each points location, inside or outside, of the polygon was verified sequentially. No inconsistent points were discovered across all trials and implementations.
 \end{abstract}
 
 \section{Technical Description}
@@ -72,14 +72,13 @@ The next issue was my own. I could not, despite significant effort, get the poin
 
 Lastly, one minor annoyance with this project was the cuda memory operations library. I could not determine how to transfer c++ stl types between host and device. The functions I found all focused on transfering bytes, which is greate for simple types like \texttt{std::vector<int>}, but not so great for composite types where the memory layout maybe a bit more complex. In my implementation I originally chose to use a \texttt{std::vector<std::pair<float, float>>} which I was unsure if accessing the underlying data of the vector would be ordered pair.first, pair.second, pair.first, pair.second, etc. Because of this limitation it necessitated changing the function interfaces into c-style interfaces with pointers, which works, but is difficult to maintain in a c++ application, not to mention it goes against modern cpp programming practices.
 
-Nevertheless, stepping down from my software engineering soap box, the implementations are feature complete, but as evidenced above are not without issue and getting the systems interactions correct proved to be the most challenging part.
+Nevertheless, stepping down from my software engineering soap box, the implementations are feature complete, but as evidenced above are not without issue and getting the systems interactions correct proved to be the most challenging part. Ultimately, I was unable to reconcile the differences within the timeframe and had to take measurements on two different systems.
  
 
 \section{Results}
-Timing of parallel code vs serial code. 
-Timing of various implementations. 
-Bottleneck analysis using profiling. 
-Screenshots of your project running.
+The results of my work are fairly weak due to complications during implementation. As a consequence of the issues I was forced to take measurements of parallel code on seperate systems. The CPU implementation ran on my local computer (2 x Intel Xeon X5650 6 Cores 2.67GHz, 24 logical cores total, 24GB RAM) and the GPU implementation ran on bender. Both ran with the same number of points for the same number of trials, but unfortuntaely the implementations are different, due to the different functionality of the standard library and cuda. So despite comparing apples and oranges I will try to do my best reviewing the results. 
+
+
 
 \section{Documentation}
 Documentation and outline of how to compile and run your project. Description of expected results when running your project. Which input should be used for testing?

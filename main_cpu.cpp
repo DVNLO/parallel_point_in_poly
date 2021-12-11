@@ -114,7 +114,7 @@ test_unit_square()
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(-1.0, 2.0);
-    std::size_t point_count{ 1'000'000'000 };
+    std::size_t point_count{ 100'000'000 };
     puts("begin point allocation");
     std::vector<std::pair<float, float>> points(point_count);
     puts("begin point generation");
