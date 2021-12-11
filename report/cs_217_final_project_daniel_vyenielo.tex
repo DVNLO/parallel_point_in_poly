@@ -78,11 +78,25 @@ Nevertheless, stepping down from my software engineering soap box, the implement
 \section{Results}
 The results of my work are fairly weak due to complications during implementation. As a consequence of the issues I was forced to take measurements of parallel code on seperate systems. The CPU implementation ran on my local computer (2 x Intel Xeon X5650 6 Cores 2.67GHz, 24 logical cores total, 24GB RAM) and the GPU implementation ran on bender. Both ran with the same number of points for the same number of trials, but unfortuntaely the implementations are different, due to the different functionality of the standard library and cuda. So despite comparing apples and oranges I will try to do my best reviewing the results. 
 
+The runtime results are presented in the following table. The table details the execution time for 32 trials on my local system and bender for a $10^8$ point determinations using a unit square as the polygon.
 
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{l|l|l}
+points (count) & cpu runtime (s) & gpu runtime (s) \\ \hline
+100,000,000 & 0.1562 +/- 0.0038 & 0.2314 +/- 0.0103 
+\end{tabular}
+\end{center}
+\end{table}
+
+For 100,000,000 points my local system's cpu completed faster, even when considering standard error of the 32 measurements. Unfortunately, not much more can be said about this comparison. I did not take more execution time measurements, or program the applications to be flexible enough to table command line arguments, so this is kind of all I was able to measure, and because the systems are different, I didn't collect a bunch of meaningless data. 
+
+Nevertheless, these results are still encouraging if we consider some additional observations. First, time measurements for GPU code include include memory management operations and transfer times. So in the future optimizations to memory management and transfer may assist in the GPU outperforming the CPU. Two possible optimizations are the use of streams, and pinned memory for the points. Currently non-pinned memory is used, and no streams are employed. If streams were employed then execution could begin earlier. Currently execution waits to receive all points before beginning. With these two additions I believe my GPU implementation could surpass the CPU.
 
 \section{Documentation}
-Documentation and outline of how to compile and run your project. Description of expected results when running your project. Which input should be used for testing?
+There are two binary's, one produced for CPU and the other produced for GPU. The CPU binary is generated with a build script \texttt{./build\_cpu.sh}. The CPU binary is generated with a similarly named build script \texttt{build\_gpu.sh}. Each build script produced a binary \texttt{cpu.out} and \texttt{gpu.out}, respectively. Unfortunately, each binary comes hardcoded with test cases built in, and does not read parameters from the command line, so the tests are hardcoded. 
 
+If there are issues with \texttt{./build\_cpu.sh} it may be because the system does not have the \texttt{g++-10} compiler installed or available by that name in the environment. If this happens, then there is a \texttt{setup.sh} script which will download the compiler and the intel thread building blocks (-ltbb) library in order to link the parallel algorithms library. In a last case scenario, you can try running on local g++, but if the version is really old, say like the one on bender, then it will not compile since the parallel algorithms library is relatively new. 
 
 \end{document}
 
